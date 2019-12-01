@@ -16,18 +16,11 @@ class ProjectController extends Controller
     {
         $projects = Project::where('is_completed', false)
                             ->orderBy('created_at', 'desc')
+                            ->withCount(['tasks' => function($query) {
+                              $query->where('is_completed', false);
+                            }])
                             ->get();
-        return $projects;
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return $projects->toJson();
     }
 
     /**
@@ -38,7 +31,18 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+          'name' => 'required',
+          'description' => 'required'
+        ]);
+
+
+        $project = Project::create([
+          'name' => $validatedData['name'],
+          'description' => $validatedData['description'],
+        ]);
+
+        return response()->json('Project created!');
     }
 
     /**
@@ -47,9 +51,13 @@ class ProjectController extends Controller
      * @param  \App\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function show(Project $project)
+    public function show($id)
     {
-        //
+        $project = Project::with(['tasks' => function($query) {
+          $query->where('is_completed', false);
+        }])->findOrFail($id);
+
+        return $project->toJson();
     }
 
     /**
@@ -60,6 +68,8 @@ class ProjectController extends Controller
      */
     public function markAsCompleted(Project $project)
     {
-      //
+      $project->is_completed = true;
+      $project->update();
+      return response()->json('Project updated');
     }
 }

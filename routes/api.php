@@ -18,9 +18,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-Route::get('projects', 'ProjectController@index');
-Route::post('projects', 'ProjectController@store');
-Route::get('projects/{id}', 'ProjectController@show');
-Route::put('projects/{project}', 'ProjectController@markAsCompleted');
-Route::post('tasks', 'TaskController@store');
-Route::put('tasks/{task}', 'TaskController@markAsCompleted');
+Route::prefix('projects')->group(function() {
+  Route::get('/', 'ProjectController@index');
+  Route::post('/', 'ProjectController@store');
+  Route::get('{id}', 'ProjectController@show');
+  Route::put('{project}', 'ProjectController@markAsCompleted');
+});
+
+Route::prefix('tasks')->group(function() {
+  Route::post('/', 'TaskController@store');
+  Route::put('{task}', 'TaskController@markAsCompleted');
+});

@@ -55,7 +55,7 @@ class NewProject extends Component {
       .catch(error => {
         console.log(error);
         this.setState({
-          errors: error.response.data.errors
+          errors:  error.message || error.response.data.errors
         })
       })
   }

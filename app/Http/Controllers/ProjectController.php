@@ -58,6 +58,7 @@ class ProjectController extends Controller
         }])->findOrFail($id);
 
         return $project->toJson();
+
     }
 
     /**

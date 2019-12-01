@@ -29,3 +29,8 @@ Route::prefix('tasks')->group(function() {
   Route::post('/', 'TaskController@store');
   Route::put('{task}', 'TaskController@markAsCompleted');
 });
+
+Route::fallback(function(){
+    return response()->json([
+        'message' => 'Resource Not Found.'], 404);
+});

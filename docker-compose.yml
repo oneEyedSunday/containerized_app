@@ -1,0 +1,45 @@
+version: "3.7"
+services:
+  taskmanager:
+    build:
+      args:
+        user: larauser
+        uid: 1000
+      context: ./taskmanager
+      dockerfile: Dockerfile
+    image: taskmanager
+    container_name: taskmanager-app
+    restart: unless-stopped
+    env_file: ./taskmanager/.env
+    depends_on:
+      - db
+    working_dir: /var/www/
+    networks:
+      - taskmanager
+
+  db:
+    image: mysql:5.7
+    container_name: taskmanager-db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    env_file: ./taskmanager/.env
+    volumes:
+      - ./taskmanager/docker-compose/mysql:/docker-entrypoint-initdb.d
+    networks:
+      - taskmanager
+
+  nginx:
+    image: nginx:1.17-alpine
+    container_name: taskmanager-nginx
+    restart: unless-stopped
+    ports:
+      - 8000:80
+    volumes:
+      - ./taskmanager/docker-compose/nginx:/etc/nginx/conf.d
+    networks:
+      - taskmanager
+networks:
+  taskmanager:
+    driver: bridge

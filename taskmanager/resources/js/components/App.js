@@ -6,7 +6,7 @@ import ProjectList from './ProjectList';
 import NewProject from './NewProject'
 import SingleProject from './SingleProject'
 
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
 
 class App extends Component {
@@ -17,8 +17,9 @@ class App extends Component {
               <Header />
               <Switch>
                 <Route exact path="/" component={ProjectList} />
-                <Route path='/create' component={NewProject} />
-                <Route path='/:id' component={SingleProject} />
+                <Route path='/new' component={NewProject} />
+                <Route path='/project/:id' component={SingleProject} />
+                <Redirect to="/" />
               </Switch>
             </div>
           </BrowserRouter>

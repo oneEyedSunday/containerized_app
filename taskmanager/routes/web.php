@@ -11,4 +11,8 @@
 |
 */
 
-Route::view('/{path?}', 'app');
+// Route::view('/{path?}', 'app');
+
+Route::fallback(function() {
+  return view('app');
+});
